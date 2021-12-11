@@ -5,9 +5,9 @@
     :ref="id"
     :id="id"
     :disabled="disabled"
-    :aria-label="label"
+    :name="name"
   >
-    {{ label }}
+    <slot></slot>
   </button>
 </template>
 
@@ -25,9 +25,6 @@ export default {
       type: String,
       default: "button",
     },
-    label: {
-      type: String,
-    },
     btnClass: {
       type: String,
       default: "primary",
@@ -35,6 +32,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    name: {
+      type: String,
+      default: "",
     },
   },
 };

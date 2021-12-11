@@ -5,11 +5,12 @@
   font-size: 1rem;
   font-family: $font-family;
   border-radius: 3px;
-  padding: 10px 10px;
+  padding: 10px;
   min-width: unset;
   width: 100%;
   text-decoration: none;
   line-height: 1.6875em;
+  transition: all 0.1s ease-in-out;
 
   @if $varient == "primary" {
     background: $midnight;
@@ -21,17 +22,20 @@
     border: 1px solid $black;
     color: $black;
     font-weight: 400;
+  } @else if $varient == "round" {
+    background: $cream;
+    border: 1px solid $black;
+    border-radius: 20px;
+    width: unset;
   }
 
   &:hover {
-    transition: all 0.1s ease-in-out;
+    padding: 11px;
 
     @if $varient == "primary" {
-      color: $black;
-      background: $cream;
-      border: 1px solid $black;
-    } @else if $varient == "outline" {
-      background: darken($cream, 10%);
+      background: lighten($midnight, 5%);
+    } @else if $varient == "outline" or $varient == "round" {
+      border: 2px solid $black;
     }
 
     cursor: pointer;
@@ -39,18 +43,23 @@
 
   &:active,
   &:disabled {
-    color: $black;
-    background: $beige;
-    border: 1px solid $black;
+    @if $varient == "primary" {
+      background: darken($midnight, 5%);
+    } @else if $varient == "outline" or $varient == "round" {
+      background: darken($cream, 10%);
+    }
   }
 
   &:disabled {
     cursor: not-allowed;
   }
 
-  @media screen and (min-width: 569px) {
-    min-width: 250px;
+  @media screen and (min-width: 768px) {
     width: unset;
+
+    @if $varient == "primary" or $varient == "outline" {
+      min-width: 250px;
+    }
   }
 }
 
