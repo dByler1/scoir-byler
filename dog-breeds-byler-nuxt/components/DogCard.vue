@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import capitalizeFirstLetter from "~/mixins/capitalizeFirstLetter";
+
 export default {
   name: "dog-card",
   props: {
@@ -22,6 +24,7 @@ export default {
       type: String,
     },
   },
+  mixins: [capitalizeFirstLetter],
   computed: {
     image() {
       //return the img url if available, else 1px png
@@ -32,7 +35,9 @@ export default {
     breed() {
       const parts = this.imgUrl.split("/");
 
-      return parts[4];
+      const breedArr = parts[4].split("-");
+
+      return breedArr.map((n) => this.capitalizeFirstLetter(n)).join(" ");
     },
   },
 };

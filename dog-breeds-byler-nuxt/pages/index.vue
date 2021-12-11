@@ -1,19 +1,25 @@
 <template>
-  <section>
+  <page-loading-spinner v-if="$fetchState.pending" />
+  <page-loading-error v-else-if="$fetchState.error" />
+  <section v-else>
     <h1>Dog Catcher</h1>
 
-    <div class="search-line">
-      <text-input
-        placeholder="Find a breed to catch"
-        name="search for a dog breed"
-      />
+    <pages-dog-catcher-search-line
+      :breeds-list="simpleBreedsList"
+      :catching="catching"
+      @catching="catching = $event"
+      @caught="caught.push($event)"
+    />
 
-      <db-button @click.native="randomFetch" :disabled="catching"
-        >Catch a Random Breed</db-button
+    <div class="caught-headline">
+      <h2>Caught Breeds</h2>
+      <db-button
+        btn-class="outline"
+        :disabled="caught.length == 0"
+        @click.native="caught = []"
+        >Clear All</db-button
       >
     </div>
-
-    <h2>Caught Breeds</h2>
 
     <pages-dog-catcher-collection
       :collection="caught"
@@ -27,51 +33,76 @@ export default {
   name: "home",
   data() {
     return {
+      selectedBreed: null,
       catching: false,
       caught: [],
+      simpleBreedsList: [],
     };
   },
   methods: {
-    async randomFetch() {
-      this.catching = true;
-
-      const random = await this.$axios.$get(
-        "https://dog.ceo/api/breeds/image/random"
-      );
-
-      this.catching = false;
-      this.caught.push(random.message);
-    },
     removeCard(index) {
       this.caught.splice(index, 1);
     },
+    flattenSubBreeds(breed, subBreeds) {
+      const formattedSubBreeds = [];
+
+      subBreeds.forEach((sb) => {
+        formattedSubBreeds.push(`${sb} ${breed}`);
+      });
+
+      return formattedSubBreeds;
+    },
+    createSimpleBreedsList(breeds) {
+      let simpleBreedsList = [];
+
+      for (const property in breeds) {
+        if (breeds[property].length != 0) {
+          const subBreeds = this.flattenSubBreeds(property, breeds[property]);
+
+          simpleBreedsList = simpleBreedsList.concat(subBreeds);
+        } else {
+          simpleBreedsList.push(property);
+        }
+      }
+      return simpleBreedsList;
+    },
   },
   async fetch() {
-    const breeds = await this.$axios.$get(
-      "https://dog.ceo/api/breeds/list/all"
-    );
+    try {
+      const breeds = await this.$axios.$get(
+        "https://dog.ceo/api/breeds/list/all"
+      );
+
+      this.simpleBreedsList = this.createSimpleBreedsList(breeds.message);
+      return;
+    } catch (error) {
+      console.error(error);
+    }
   },
 };
 </script>
 
 <style lang="scss" scoped>
-h1,
-h2 {
+h1 {
+  text-align: center;
+}
+
+.caught-headline {
   display: flex;
+  align-items: center;
   justify-content: center;
-}
-
-h2 {
+  position: relative;
   margin: 70px 0 30px;
-}
 
-.search-line {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  h2 {
+    margin: 0;
+  }
 
-  input {
-    margin-bottom: 40px;
+  button {
+    position: absolute;
+    right: 0;
+    width: unset;
+    min-width: unset;
   }
 }
 </style>

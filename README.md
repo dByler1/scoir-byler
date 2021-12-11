@@ -21,7 +21,7 @@ This repo contains an exercise intended for Front-End Engineers.
 
 - Speed first, custom components second
 - No support for IE
-- Rely on the api return string for breed name
+- Rely on the api for breed name and accept inconsistencies
 
 ## How-To
 
