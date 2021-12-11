@@ -7,3 +7,8 @@ button.outline,
 a.outline {
   @include button-var("outline");
 }
+
+button.round,
+a.round {
+  @include button-var("round");
+}

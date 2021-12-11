@@ -1,0 +1,100 @@
+<template>
+  <figure>
+    <db-button
+      btn-class="round"
+      name="remove dog card"
+      @click.native="$emit('remove')"
+    >
+      <icons-icon-x />
+    </db-button>
+
+    <img :src="imgUrl" :alt="breed" />
+
+    <figcaption class="paragraph">{{ breed }}</figcaption>
+  </figure>
+</template>
+
+<script>
+export default {
+  name: "dog-card",
+  props: {
+    imgUrl: {
+      type: String,
+    },
+  },
+  computed: {
+    image() {
+      //return the img url if available, else 1px png
+      this.imgUrl
+        ? this.imgUrl
+        : "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+    },
+    breed() {
+      const parts = this.imgUrl.split("/");
+
+      return parts[4];
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+figure {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 20px;
+  border: 3px solid $pewter;
+  margin: 20px;
+  width: 275px;
+
+  @media screen and (min-width: 768px) {
+    width: 350px;
+  }
+}
+
+img {
+  background-color: $dark-grey;
+  object-fit: contain;
+  object-position: center;
+  width: 100%;
+  height: auto;
+  max-width: 275px;
+  max-height: 175px;
+  aspect-ratio: auto 275 / 175;
+
+  @media screen and (min-width: 768px) {
+    max-width: 350px;
+    max-height: 200px;
+    width: 100%;
+    height: auto;
+
+    aspect-ratio: auto 350 / 200;
+  }
+}
+
+figcaption {
+  text-align: center;
+  margin-top: 10px;
+}
+
+::v-deep button {
+  position: absolute;
+  right: -10px;
+  top: -15px;
+
+  svg {
+    height: 15px;
+    width: 15px;
+
+    path {
+      fill: $black;
+    }
+  }
+
+  &:hover svg path {
+    fill: $dark-grey;
+  }
+}
+</style>
