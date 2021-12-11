@@ -1,0 +1,9 @@
+button.primary,
+a.primary {
+  @include button-var("primary");
+}
+
+button.outline,
+a.outline {
+  @include button-var("outline");
+}
