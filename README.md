@@ -26,8 +26,15 @@ This repo contains an exercise intended for Front-End Engineers.
 ## How-To
 
 - Clone the repo and cd into "dog-breeds-byler-nuxt"
+- - npm install
+- - npm run dev
+- - npm run test
+- - - (note: this was my first attempt since bootcamp at tests. They are very basic. Looking forward to discussing.)
+- - any trouble running the app please don't hesitate to contact me
+
 - "dog-breeds-byler-nuxt" contains the dog breeds application
-- "dog-breeds-byler-nuxt" contains a README with instructions on how to run the nuxt app
+- "dog-breeds-byler-nuxt" contains a README with further instructions on how to run the nuxt app
+-
 
 ### Planning
 
