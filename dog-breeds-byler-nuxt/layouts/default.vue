@@ -12,6 +12,7 @@
 <script>
 import DbHeader from "~/components/Header";
 import DbFooter from "~/components/Footer";
+
 export default {
   components: {
     DbHeader,

@@ -1,14 +1,19 @@
 <template>
   <nav>
     <div class="inner">
-      <h1>Dogs, Dogs, Dogs</h1>
+      <dog-cat />
     </div>
   </nav>
 </template>
 
 <script>
+import DogCat from "~/components/icons/DogCat";
+
 export default {
   name: "db-header",
+  components: {
+    DogCat,
+  },
 };
 </script>
 

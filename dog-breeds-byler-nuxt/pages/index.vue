@@ -1,10 +1,10 @@
 <template>
-  <page-loading-spinner v-if="$fetchState.pending" />
-  <page-loading-error v-else-if="$fetchState.error" />
+  <page-loading-spinner v-if="$fetchState && $fetchState.pending" />
+  <page-loading-error v-else-if="$fetchState && $fetchState.error" />
   <section v-else>
-    <h1>Dog Catcher</h1>
+    <h1 ref="title">Dog Catcher</h1>
 
-    <pages-dog-catcher-search-line
+    <search-line
       :breeds-list="simpleBreedsList"
       :catching="catching"
       @catching="catching = $event"
@@ -13,6 +13,7 @@
 
     <div class="caught-headline">
       <h2>Caught Breeds</h2>
+
       <db-button
         btn-class="outline"
         :disabled="caught.length == 0"
@@ -21,16 +22,28 @@
       >
     </div>
 
-    <pages-dog-catcher-collection
-      :collection="caught"
-      @remove="removeCard($event)"
-    />
+    <collection :collection="caught" @remove="removeCard($event)" />
   </section>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
+import PageLoadingSpinner from "~/components/PageLoading/PageLoadingSpinner";
+import PageLoadingError from "~/components/PageLoading/PageLoadingError";
+import SearchLine from "~/components/pages/dog-catcher/SearchLine";
+import Collection from "~/components/pages/dog-catcher/Collection";
+import DbButton from "~/components/Button";
+
 export default {
-  name: "home",
+  name: "dog-catcher-home",
+  components: {
+    PageLoadingSpinner,
+    PageLoadingError,
+    SearchLine,
+    Collection,
+    DbButton,
+  },
   data() {
     return {
       selectedBreed: null,
@@ -38,6 +51,11 @@ export default {
       caught: [],
       simpleBreedsList: [],
     };
+  },
+  cmputed: {
+    ...mapState({
+      storeBreedsList: (state) => state.dogs.breedsList,
+    }),
   },
   methods: {
     removeCard(index) {
@@ -68,12 +86,17 @@ export default {
     },
   },
   async fetch() {
+    if (this.storeBreedsList)
+      return this.createSimpleBreedsList(this.storeBreedsList);
+
     try {
       const breeds = await this.$axios.$get(
         "https://dog.ceo/api/breeds/list/all"
       );
 
       this.simpleBreedsList = this.createSimpleBreedsList(breeds.message);
+      await this.$store.dispatch("dogs/setBreedsList", breeds.message);
+
       return;
     } catch (error) {
       console.error(error);

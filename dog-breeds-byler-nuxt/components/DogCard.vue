@@ -2,10 +2,10 @@
   <figure>
     <db-button
       btn-class="round"
-      name="remove dog card"
+      aria-label="remove dog card"
       @click.native="$emit('remove')"
     >
-      <icons-icon-x />
+      <icon-x />
     </db-button>
 
     <img :src="imgUrl" :alt="breed" />
@@ -17,8 +17,15 @@
 <script>
 import capitalizeFirstLetter from "~/mixins/capitalizeFirstLetter";
 
+import DbButton from "~/components/Button";
+import IconX from "~/components/icons/IconX";
+
 export default {
   name: "dog-card",
+  components: {
+    DbButton,
+    IconX,
+  },
   props: {
     imgUrl: {
       type: String,
@@ -33,11 +40,15 @@ export default {
         : "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
     },
     breed() {
-      const parts = this.imgUrl.split("/");
+      if (this.imgUrl) {
+        const parts = this.imgUrl.split("/");
 
-      const breedArr = parts[4].split("-");
+        const breedArr = parts[4].split("-");
 
-      return breedArr.map((n) => this.capitalizeFirstLetter(n)).join(" ");
+        return breedArr.map((n) => this.capitalizeFirstLetter(n)).join(" ");
+      }
+
+      return "";
     },
   },
 };
