@@ -30,12 +30,10 @@
   }
 
   &:hover {
-    padding: 11px;
-
     @if $varient == "primary" {
       background: lighten($midnight, 5%);
     } @else if $varient == "outline" or $varient == "round" {
-      border: 2px solid $black;
+      background: darken($cream, 5%);
     }
 
     cursor: pointer;
