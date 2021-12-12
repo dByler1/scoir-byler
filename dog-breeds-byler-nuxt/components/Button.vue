@@ -6,6 +6,7 @@
     :id="id"
     :disabled="disabled"
     :name="name"
+    :aria-label="ariaLabel"
   >
     <slot></slot>
   </button>
@@ -34,6 +35,10 @@ export default {
       default: false,
     },
     name: {
+      type: String,
+      default: "",
+    },
+    ariaLabel: {
       type: String,
       default: "",
     },

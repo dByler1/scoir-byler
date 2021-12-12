@@ -1,26 +1,41 @@
 <template>
   <div class="search-line">
-    <pages-dog-catcher-search
+    <search
       :disabled="catching"
       :config="breedsListConfig"
       v-model="selectedBreed"
     />
 
-    <db-button @click.native="randomFetch" :disabled="catching"
+    <span class="error danger p-small" v-if="breedsListError">{{
+      breedsListError
+    }}</span>
+
+    <db-button @click.native="fetchBreed(false)" :disabled="catching"
       >Catch a Random Breed</db-button
     >
+
+    <span class="error danger p-small" v-if="randomBreedError">{{
+      randomBreedError
+    }}</span>
   </div>
 </template>
 
 <script>
 import capitalizeFirstLetter from "~/mixins/capitalizeFirstLetter";
 
+import Search from "~/components/pages/dog-catcher/Search";
+import DbButton from "~/components/Button";
+
 export default {
   name: "search-line",
+  components: {
+    Search,
+    DbButton,
+  },
   props: {
     breedsList: {
       type: Array,
-      required: true,
+      default: () => [],
     },
     catching: Boolean,
   },
@@ -31,67 +46,80 @@ export default {
         options: [],
       },
       selectedBreed: null,
+      breedsListError: null,
+      randomBreedError: null,
     };
   },
   mixins: [capitalizeFirstLetter],
   watch: {
     breedsList: {
-      deep: true,
       immediate: true,
       handler: function () {
-        this.breedsListConfig.options = this.breedsList.map((b) => {
-          const parts = b.split(" ");
+        if (this.breedsList) {
+          this.breedsListConfig.options = this.breedsList.map((b) => {
+            const parts = b.split(" ");
 
-          const code = parts.reverse().join("/");
+            const code = parts.reverse().join("/");
 
-          const capitalizedParts = parts.map((p) => {
-            return this.capitalizeFirstLetter(p);
+            const capitalizedParts = parts.map((p) => {
+              return this.capitalizeFirstLetter(p);
+            });
+
+            const label = capitalizedParts.join(" ");
+
+            return {
+              label,
+              code,
+            };
           });
-
-          const label = capitalizedParts.join(" ");
-
-          return {
-            label,
-            code,
-          };
-        });
+        }
       },
     },
     selectedBreed: function () {
       if (this.selectedBreed && this.selectedBreed.code) {
-        this.fetchSpecificBreed(this.selectedBreed.code);
+        this.fetchBreed(this.selectedBreed.code);
       }
     },
   },
   methods: {
-    async fetchSpecificBreed(code) {
-      this.$emit("catching", true);
+    async fetchBreed(code) {
+      this.resetForAttempt();
+
+      const url = code
+        ? `https://dog.ceo/api/breed/${code}/images/random`
+        : "https://dog.ceo/api/breeds/image/random";
 
       try {
-        const dog = await this.$axios.$get(
-          `https://dog.ceo/api/breed/${code}/images/random`
-        );
-        this.$emit("caught", dog.message);
-        this.$emit("catching", false);
-        this.selectedBreed = null;
+        const dog = await this.$axios.$get(url);
+
+        this.successState(dog.message);
       } catch (error) {
-        console.error(error);
-        this.$emit("catching", false);
-        this.selectedBreed = null;
+        this.errorState(error, code);
       }
     },
-    async randomFetch() {
+    resetForAttempt() {
       this.$emit("catching", true);
 
-      try {
-        const random = await this.$axios.$get(
-          "https://dog.ceo/api/breeds/image/random"
-        );
-        this.$emit("catching", false);
-        this.$emit("caught", random.message);
-      } catch (error) {
-        this.$emit("catching", false);
-        console.error(error);
+      this.randomBreedError = this.randomBreedError = null;
+    },
+    successState(message) {
+      this.$emit("catching", false);
+
+      this.$emit("caught", message);
+
+      this.selectedBreed = null;
+    },
+    errorState(error, random) {
+      console.error(error);
+
+      this.$emit("catching", false);
+
+      if (random) {
+        this.randomBreedError = `Sorry, there was a problem catching a random breed. Please refresh the page and try again.`;
+      } else {
+        this.selectedBreed = null;
+
+        this.breedsListError = `Sorry, there was a problem catching a breed. Please refresh the page and try again.`;
       }
     },
   },
@@ -106,6 +134,10 @@ export default {
 
   button.primary {
     margin-top: 40px;
+  }
+
+  .error {
+    text-align: center;
   }
 }
 </style>

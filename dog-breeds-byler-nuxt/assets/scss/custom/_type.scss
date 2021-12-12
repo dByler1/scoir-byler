@@ -18,6 +18,10 @@ p,
   @include text-var(1rem, 1rem, 400);
 }
 
+.p-small {
+  @include text-var(0.8rem, 0.8rem, 400);
+}
+
 strong,
 .bold {
   font-weight: 700;

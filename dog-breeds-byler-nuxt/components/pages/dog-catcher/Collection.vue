@@ -1,5 +1,5 @@
 <template>
-  <ul class="collection" v-if="collection.length">
+  <ul class="collection" v-if="collection && collection.length">
     <li v-for="(breed, ix) in collection" :key="ix">
       <dog-card :img-url="breed" @remove="$emit('remove', ix)" />
     </li>
@@ -11,8 +11,13 @@
 </template>
 
 <script>
+import DogCard from "~/components/DogCard";
+
 export default {
   name: "collection",
+  components: {
+    DogCard,
+  },
   props: {
     collection: [Array],
   },
