@@ -12,7 +12,11 @@ export default {
 
 <style lang="scss" scoped>
 footer {
-  background: $black;
+  background: $dark-grey;
   min-height: 250px;
+  background-image: url("~/assets/images/paws.svg");
+  background-size: 100px auto;
+  background-position: center;
+  background-repeat: repeat;
 }
 </style>

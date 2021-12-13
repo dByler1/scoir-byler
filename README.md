@@ -19,20 +19,16 @@ This repo contains an exercise intended for Front-End Engineers.
 
 ## Assumptions
 
-- Speed first, custom components second
+- npm packages are ok to use
 - No support for IE
-- Rely on the api for breed name and accept inconsistencies
+- Rely on the api for breed name and accept data inconsistencies
 
 ## How-To
 
 - Clone the repo and cd into "dog-breeds-byler-nuxt"
-
   - npm install
   - npm run dev
   - npm run test
-    - (note: this was my first attempt since bootcamp at tests. They are very basic. Looking forward to discussing.)
-  - any trouble running the app please don't hesitate to contact me
-
 - "dog-breeds-byler-nuxt" contains the dog breeds application
 - "dog-breeds-byler-nuxt" contains a README with further instructions on how to run the nuxt app
 
@@ -43,4 +39,25 @@ This repo contains an exercise intended for Front-End Engineers.
 3. random dog button functionality, add/remove one card, dog store, clear all
 4. type ahead widget (third party)
 5. UI cleanup and refactor
-6. custom type ahead widget
+6. custom type ahead widget (ran out of time)
+
+### Discussion
+
+##### Tests
+
+- In my conversation with Paul Johnson we talked about 100% test coverage at Scoir.
+- Since I do not have much experience with tests I took a stab at providing test coverage using Jest
+- My tests seem a little "light". They confirm that the component is loading.
+  - I added a few conditionals to init computed methods based on test fails
+  - So even the "light" tests helped me make the code more robust
+- How would you expand test coverage?
+- How do you determine "good" test coverage?
+- I'm interested to learn more about your approach to testing methodology.
+
+##### Data Inconsistancy
+
+- The dog api returns some inconsistant data: "Bulldog English" vs"Austrailian Sheppard", and in at least one instance "germansheppard"
+- For the "germansheppard" instance I found resource:
+  - https://github.com/parsakafi/wordsninja
+  - The resource needs modified to not use "fs" to read files and so will not run in the browser
+  - I'm 90% I could modify the resource to work in this case given the time

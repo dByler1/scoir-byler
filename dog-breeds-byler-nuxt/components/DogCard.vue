@@ -92,7 +92,8 @@ img {
 
 figcaption {
   text-align: center;
-  margin-top: 10px;
+  background: #fff;
+  padding: 20px;
 }
 
 ::v-deep button {
