@@ -90,12 +90,13 @@ export default {
       return this.createSimpleBreedsList(this.storeBreedsList);
 
     try {
-      const breeds = await this.$axios.$get(
+      const breeds = await fetch(
         "https://dog.ceo/api/breeds/list/all"
       );
+      const breedsJson = await breeds.json();
 
-      this.simpleBreedsList = this.createSimpleBreedsList(breeds.message);
-      await this.$store.dispatch("dogs/setBreedsList", breeds.message);
+      this.simpleBreedsList = this.createSimpleBreedsList(breedsJson.message);
+      await this.$store.dispatch("dogs/setBreedsList", breedsJson.message);
 
       return;
     } catch (error) {

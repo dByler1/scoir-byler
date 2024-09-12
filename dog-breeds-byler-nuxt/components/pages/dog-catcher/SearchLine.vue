@@ -90,9 +90,9 @@ export default {
         : "https://dog.ceo/api/breeds/image/random";
 
       try {
-        const dog = await this.$axios.$get(url);
-
-        this.successState(dog.message);
+        const dog = await fetch(url);
+        const dogJson = await dog.json();
+        this.successState(dogJson.message);
       } catch (error) {
         this.errorState(error, code);
       }
